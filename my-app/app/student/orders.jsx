@@ -49,14 +49,21 @@ export default function Orders() {
       </View>
 
       <View style={styles.orderItems}>
-        {item.items.map((orderItem) => (
-          <View key={orderItem._id} style={styles.item}>
-            <Text style={styles.itemName}>{orderItem.product.name}</Text>
-            <Text style={styles.itemDetails}>
-              Qty: {orderItem.quantity} × ₹{orderItem.product.price}
-            </Text>
-          </View>
-        ))}
+        {Array.isArray(item?.items) && item.items.length > 0 ? (
+          item.items.map((orderItem, idx) => {
+            const prod = orderItem?.product || {};
+            return (
+              <View key={orderItem?._id ?? `item-${idx}`} style={styles.item}>
+                <Text style={styles.itemName}>{prod.name ?? 'Unnamed product'}</Text>
+                <Text style={styles.itemDetails}>
+                  Qty: {orderItem?.quantity ?? 0} × ₹{prod.price ?? '0.00'}
+                </Text>
+              </View>
+            );
+          })
+        ) : (
+          <Text style={styles.itemDetails}>No items available for this order</Text>
+        )}
       </View>
 
       <View style={styles.orderFooter}>
